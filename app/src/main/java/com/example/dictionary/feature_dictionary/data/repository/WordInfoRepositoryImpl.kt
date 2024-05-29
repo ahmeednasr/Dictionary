@@ -20,6 +20,8 @@ class WordInfoRepositoryImpl(
 
         try {
             val remoteWordInfos = api.getWordInfo(word)
+
+            /**UPDATE DATABASE*/
             dao.deleteWordInfo((remoteWordInfos.map { it.word.toString() }))
             dao.insertWordInfos(remoteWordInfos.map { it.toWordInfoEntity() })
 
@@ -39,5 +41,7 @@ class WordInfoRepositoryImpl(
                 )
             )
         }
+        val newWordInfos = dao.getWordInfos(word).map { it.toWordInfo() }
+        emit(Resource.Success(newWordInfos))
     }
 }
